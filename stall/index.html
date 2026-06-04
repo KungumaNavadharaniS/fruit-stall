@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fresco Fruits — Fresh Fruit Stall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+ 
+  <style>
+    :root {
+      --clr-bg:       #fffbf2;
+      --clr-primary:  #e8521a;
+      --clr-accent:   #f5c842;
+      --clr-dark:     #1a1208;
+      --clr-mid:      #6b4f2a;
+      --clr-light:    #fff4e0;
+      --clr-card:     #ffffff;
+      --radius:       14px;
+      --shadow:       0 6px 28px rgba(26,18,8,.10);
+      --nav-h:        4rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    html { font-size: 16px; scroll-behavior: smooth; }
+ 
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--clr-bg);
+      color: var(--clr-dark);
+      line-height: 1.6;
+      overflow-x: hidden; 
+    }
+
+    img { max-width: 100%; height: auto; display: block; } 
+    a { text-decoration: none; color: inherit; }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      background: var(--clr-dark);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,.3);
+    }
+ 
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--clr-accent);
+      letter-spacing: .02em;
+    }
+    .nav-logo span { color: var(--clr-primary); }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+    .nav-links a {
+      color: #e8dfc8;
+      font-size: .95rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--clr-accent); }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 26px; height: 3px;
+      background: var(--clr-accent);
+      border-radius: 3px;
+      transition: transform .3s, opacity .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    .hero {
+      min-height: 88vh;
+      background:
+        linear-gradient(135deg, rgba(26,18,8,.72) 0%, rgba(232,82,26,.45) 100%),
+        url('https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=1400&q=80') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      padding: 6rem 2.5rem 4rem;
+    }
+ 
+    .hero-content { max-width: 600px; }
+ 
+    .hero-eyebrow {
+      display: inline-block;
+      background: var(--clr-accent);
+      color: var(--clr-dark);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      padding: .35rem .9rem;
+      border-radius: 99px;
+      margin-bottom: 1.2rem;
+    }
+ 
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+     font-size: clamp(2.4rem, 6vw, 4.5rem);
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+ 
+    .hero p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: rgba(255,255,255,.85);
+      margin-bottom: 2rem;
+      max-width: 480px;
+    }
+ 
+    .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+ 
+    .btn {
+      display: inline-block;
+      padding: .8rem 1.8rem;
+      border-radius: 99px;
+      font-weight: 700;
+      font-size: .95rem;
+      letter-spacing: .04em;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+    .btn-primary { background: var(--clr-primary); color: #fff; }
+    .btn-outline  { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.6); }
+    .stats {
+      background: var(--clr-primary);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      text-align: center;
+      padding: 1.5rem 2rem;
+    }
+    .stat-item { padding: 1rem; border-right: 1px solid rgba(255,255,255,.2); }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--clr-accent);
+    }
+    .stat-label { font-size: .8rem; color: rgba(255,255,255,.85); text-transform: uppercase; letter-spacing: .08em; }
+    section { padding: 5rem 2.5rem; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--clr-dark);
+    }
+    .section-header p { color: var(--clr-mid); margin-top: .5rem; font-size: 1.05rem; }
+    .divider {
+      width: 60px; height: 4px;
+      background: var(--clr-primary);
+      border-radius: 2px;
+      margin: .8rem auto 0;
+    }
+    .fruits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.6rem;
+    }
+ 
+    .fruit-card {
+      background: var(--clr-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .fruit-card:hover { transform: translateY(-6px); box-shadow: 0 14px 36px rgba(26,18,8,.14); }
+ 
+    .fruit-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+ 
+    .fruit-info { padding: 1.1rem 1.2rem 1.4rem; }
+    .fruit-tag {
+      font-size: .68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--clr-primary); margin-bottom: .4rem;
+    }
+    .fruit-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; margin-bottom: .3rem;
+    }
+    .fruit-origin { font-size: .82rem; color: var(--clr-mid); margin-bottom: .8rem; }
+    .fruit-footer { display: flex; align-items: center; justify-content: space-between; }
+    .fruit-price { font-size: 1.15rem; font-weight: 700; color: var(--clr-primary); }
+    .fruit-btn {
+      background: var(--clr-accent);
+      border: none;
+      border-radius: 99px;
+      padding: .35rem .9rem;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .fruit-btn:hover { background: var(--clr-primary); color: #fff; }
+ 
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+ 
+    .about-img-wrap {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .about-img-wrap img {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      border-radius: var(--radius);
+    }
+    .about-badge {
+      position: absolute;
+      bottom: 1.5rem; right: 1.5rem;
+      background: var(--clr-accent);
+      color: var(--clr-dark);
+      border-radius: 50%;
+      width: 90px; height: 90px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: .9rem; text-align: center;
+      line-height: 1.2; font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0,0,0,.2);
+    }
+ 
+    .about-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+      margin-bottom: 1.2rem;
+    }
+    .about-text p { color: var(--clr-mid); margin-bottom: 1rem; }
+    .about-list { list-style: none; margin: 1.5rem 0; }
+    .about-list li {
+      padding: .5rem 0;
+      border-bottom: 1px solid #eedfc0;
+      display: flex; align-items: center; gap: .7rem;
+      color: var(--clr-mid); font-size: .97rem;
+    }
+    .about-list li::before { content: "🌿"; font-size: 1rem; }
+ 
+    /* =============================================
+       BANNER
+    ============================================= */
+    .banner {
+      background: var(--clr-accent);
+      text-align: center;
+      padding: 3.5rem 2rem;
+    }
+    .banner h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      color: var(--clr-dark);
+      margin-bottom: .7rem;
+    }
+    .banner p { color: var(--clr-mid); max-width: 500px; margin: 0 auto 1.6rem; }
+    .testimonials { background: var(--clr-light); }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .testi-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      box-shadow: var(--shadow);
+    }
+    .testi-stars { color: var(--clr-accent); font-size: 1.1rem; margin-bottom: .7rem; }
+    .testi-text { font-style: italic; color: var(--clr-mid); margin-bottom: 1rem; font-size: .95rem; }
+    .testi-author { font-weight: 700; font-size: .9rem; }
+ 
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: var(--clr-dark);
+      color: #c8b99a;
+      padding: 3rem 2.5rem 1.5rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+    .footer-brand p { margin-top: .8rem; font-size: .9rem; line-height: 1.7; max-width: 280px; }
+    .footer-col h4 {
+      color: var(--clr-accent);
+      font-size: .8rem; text-transform: uppercase;
+      letter-spacing: .12em; margin-bottom: 1rem;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { padding: .3rem 0; font-size: .9rem; }
+    .footer-col a:hover { color: var(--clr-accent); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 1.2rem;
+      font-size: .82rem;
+      text-align: center;
+      color: #6b5a42;
+    }
+ 
+    /* =============================================
+       MEDIA QUERIES — MOBILE-FIRST OVERRIDES
+    ============================================= */
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: var(--nav-h);
+        left: 0; right: 0;
+        background: var(--clr-dark);
+        flex-direction: column;      
+        gap: 0;
+        padding: 1rem 0 2rem;
+        transform: translateY(-120%);
+        opacity: 0;
+        transition: transform .35s ease, opacity .3s ease;
+        pointer-events: none;
+        box-shadow: 0 8px 20px rgba(0,0,0,.3);
+      }
+      .nav-links.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .nav-links li { border-bottom: 1px solid rgba(255,255,255,.08); }
+      .nav-links a {
+        display: block;
+        padding: 1rem 2rem;
+        font-size: 1rem;
+      }
+      .hamburger { display: flex; } 
+      .hero {
+        padding: 5rem 1.2rem 3rem;
+        min-height: 70vh;
+      }
+      .btn-group { flex-direction: column; } 
+      .btn { width: 100%; text-align: center; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.15); }
+      .stat-item:last-child { border-bottom: none; }
+
+      section { padding: 3rem 1.2rem; }
+      .fruits-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+      .about-grid {
+        grid-template-columns: 1fr; 
+        gap: 2rem;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;  
+        gap: 1.8rem;
+      }
+      footer { padding: 2.5rem 1.2rem 1rem; }
+    }
+ 
+    @media (max-width: 420px) {
+      .nav-logo { font-size: 1.25rem; }
+      .fruits-grid { grid-template-columns: 1fr; }  
+      .stat-num { font-size: 1.5rem; }
+      .about-badge { width: 72px; height: 72px; font-size: .75rem; }
+    }
+ 
+  </style>
+</head>
+<body>
+ 
+  <!-- ========== NAVIGATION ========== -->
+  <nav>
+    <div class="nav-logo">Fresco<span>🍊</span>Fruits</div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#fruits">Fruits</a></li>
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+ 
+  <!-- ========== HERO ========== -->
+  <header class="hero">
+    <div class="hero-content">
+      <span class="hero-eyebrow">🌾 Farm to Your Doorstep</span>
+      <h1>Nature's Sweetest Gifts, Picked Fresh Daily</h1>
+      <p>Tropical & seasonal fruits sourced directly from local farms. No cold-storage, no middlemen — just pure, honest freshness.</p>
+      <div class="btn-group">
+        <a href="#fruits" class="btn btn-primary">Shop Fruits</a>
+        <a href="#about" class="btn btn-outline">Our Story</a>
+      </div>
+    </div>
+  </header>
+ 
+  <!-- ========== STATS ========== -->
+  <div class="stats">
+    <div class="stat-item">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Fruit Varieties</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">12</div>
+      <div class="stat-label">Partner Farms</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">2k+</div>
+      <div class="stat-label">Happy Customers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">Daily</div>
+      <div class="stat-label">Fresh Deliveries</div>
+    </div>
+  </div>
+ 
+  <!-- ========== FRUITS SECTION ========== -->
+  <section id="fruits">
+    <div class="section-header">
+      <h2>Today's Fresh Picks</h2>
+      <div class="divider"></div>
+      <p>Harvested this morning, at your door by evening.</p>
+    </div>
+    <div class="fruits-grid">
+ 
+      <div class="fruit-card">
+        <img class="fruit-img"
+          src="https://images.unsplash.com/photo-1553279768-865429fa0078?w=400&q=80"
+          alt="Alphonso Mangoes" loading="lazy" />
+        <div class="fruit-info">
+          <div class="fruit-tag">🏆 Bestseller</div>
+          <div class="fruit-name">Alphonso Mango</div>
+          <div class="fruit-origin">Ratnagiri, Maharashtra</div>
+          <div class="fruit-footer">
+            <span class="fruit-price">₹180 / kg</span>
+            <button class="fruit-btn">Add +</button>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="fruit-card">
+        <img class="fruit-img"
+          src="./watermelon.jpg"
+          alt="Watermelon" loading="lazy" />
+        <div class="fruit-info">
+          <div class="fruit-tag">🌊 Summer Special</div>
+          <div class="fruit-name">Sweet Watermelon</div>
+          <div class="fruit-origin">Nashik, Maharashtra</div>
+          <div class="fruit-footer">
+            <span class="fruit-price">35 / kg</span>
+            <button class="fruit-btn">Add +</button>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="fruit-card">
+        <img class="fruit-img"
+          src="./pexels-joolsmagools-28710026.jpg"
+          alt="Papaya" loading="lazy" />
+        <div class="fruit-info">
+          <div class="fruit-tag">💛 Organic</div>
+          <div class="fruit-name">Red Apple</div>
+          <div class="fruit-origin">Maharashtra</div>
+          <div class="fruit-footer">
+            <span class="fruit-price">₹240 / kg</span>
+            <button class="fruit-btn">Add +</button>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="fruit-card">
+        <img class="fruit-img"
+          src="./images.jfif"
+          alt="Grapes" loading="lazy" />
+        <div class="fruit-info">
+          <div class="fruit-tag">🍇 Seasonal</div>
+          <div class="fruit-name">Thompson Seedless</div>
+          <div class="fruit-origin">Sangli, Maharashtra</div>
+          <div class="fruit-footer">
+            <span class="fruit-price">₹90 / kg</span>
+            <button class="fruit-btn">Add +</button>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="fruit-card">
+        <img class="fruit-img"
+          src="https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=400&q=80"
+          alt="Pineapple" loading="lazy" />
+        <div class="fruit-info">
+          <div class="fruit-tag">🌴 Tropical</div>
+          <div class="fruit-name">Kew Pineapple</div>
+          <div class="fruit-origin">Kerala</div>
+          <div class="fruit-footer">
+            <span class="fruit-price">₹55 / piece</span>
+            <button class="fruit-btn">Add +</button>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="fruit-card">
+        <img class="fruit-img"
+          src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&q=80"
+          alt="Bananas" loading="lazy" />
+        <div class="fruit-info">
+          <div class="fruit-tag">⚡ Energy Boost</div>
+          <div class="fruit-name">Robusta Banana</div>
+          <div class="fruit-origin">Trichy, Tamil Nadu</div>
+          <div class="fruit-footer">
+            <span class="fruit-price">₹30 / dozen</span>
+            <button class="fruit-btn">Add +</button>
+          </div>
+        </div>
+      </div>
+ 
+    </div>
+  </section>
+ 
+  <!-- ========== ABOUT ========== -->
+  <section id="about" style="background: var(--clr-light);">
+    <div class="about-grid">
+      <div class="about-img-wrap">
+        <img
+          src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=700&q=80"
+          alt="Fruit market stall" loading="lazy" />
+        <div class="about-badge">15 Yrs of Freshness</div>
+      </div>
+      <div class="about-text">
+        <h2>A Family Stall. A Farmer's Promise.</h2>
+        <p>We started Fresco Fruits in 2009 with a single cart and a simple belief: everyone deserves fruit that actually tastes like fruit.</p>
+        <p>Today we partner with 12 family-run farms across Tamil Nadu, Kerala, and Maharashtra — and we're proud that not a single fruit in our stall has seen a cold-storage unit.</p>
+        <ul class="about-list">
+          <li>Sourced directly from farms, no middlemen</li>
+          <li>Delivered within 6 hours of harvest</li>
+          <li>Zero artificial ripening agents</li>
+          <li>Biodegradable packaging only</li>
+        </ul>
+        <a href="#fruits" class="btn btn-primary" style="display:inline-block;">Browse the Stall</a>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ========== BANNER ========== -->
+  <div class="banner">
+    <h2>🚚 Free Delivery on Orders Above ₹500</h2>
+    <p>Order before 6 PM and receive your fruits fresh the next morning.</p>
+    <a href="#fruits" class="btn btn-primary">Order Now</a>
+  </div>
+ 
+  <section id="testimonials" class="testimonials">
+    <div class="section-header">
+      <h2>What Our Customers Say</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The Alphonso mangoes were unbelievably sweet. You can actually tell they weren't refrigerated — the aroma fills the whole kitchen!"</p>
+        <div class="testi-author">Priya M., Erode</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Finally a fruit stall I trust. My kids refuse supermarket fruits now. Fresco Fruits has spoiled them for life — in the best way."</p>
+        <div class="testi-author">Karthik R., Coimbatore</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The weekly subscription box is worth every rupee. Fresh, varied, and packaged with real care. Highly recommended."</p>
+        <div class="testi-author">Ananya S., Salem</div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="font-size:1.5rem;">Fresco<span>🍊</span>Fruits</div>
+        <p>Bringing farm-fresh tropical fruits to your table every single day since 1999.</p>
+        <p style="margin-top:.6rem;">📍 Market Street, Coimbatore, Tamil Nadu</p>
+        <p>📞 +91 98765 43210</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#fruits">Shop Fruits</a></li>
+          <li><a href="#about">Our Story</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
+          <li><a href="#">Wholesale</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Opening Hours</h4>
+        <ul>
+          <li>Mon – Sat: 6 AM – 8 PM</li>
+          <li>Sunday: 6 AM – 1 PM</li>
+          <li style="margin-top:.6rem;">Delivery: 7 AM – 7 PM</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Fresco Fruits. Made with 🍊 in Erode, Tamil Nadu.</div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navLinks  = document.getElementById('navLinks');
+ 
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+      });
+    });
+  </script>
+ 
+</body>
+</html>
+ 
